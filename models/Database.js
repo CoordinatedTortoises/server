@@ -1,6 +1,5 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../config/db.js');
-
 // Define the model that corresponds to the entry table in the database.
 var User = sequelize.define('user', {
   username: {type: Sequelize.STRING, unique: true },
@@ -11,7 +10,8 @@ var User = sequelize.define('user', {
 // Define the model that corresponds to the entry table in the database.
 var Entry = sequelize.define('entry', {
   text: Sequelize.STRING,
-  location: Sequelize.STRING
+  location: Sequelize.STRING,
+  tags: Sequelize.STRING
 });
 
 var Relationships = sequelize.define('relationships', {

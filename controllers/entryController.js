@@ -28,6 +28,9 @@ module.exports = {
             db.Entry.findAll({ 
               where: { 
                 userId: req.query.userId,
+                tags: {
+                  $contains: searchParams
+                }
               },
               order: [['createdAt', 'DESC']]
             })

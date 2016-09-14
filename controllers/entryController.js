@@ -5,6 +5,7 @@ module.exports = {
   createEntry: function(req, res, next){
     var query = req.body;
     query['userId'] = req.user.id;
+    console.log(query);
     db.Entry.create(query)
       .then(function(newEntry) {
         res.send('Success');
@@ -15,6 +16,7 @@ module.exports = {
   },
 
   getEntries: function(req, res, next) {
+    var searchParams = req.query.tags || [];
     if (req.query.userId && (req.query.userId !== req.user.id.toString())) {
       // check if req.query.userId is in friendlist
       db.Relationships.findOne({ 
@@ -24,7 +26,9 @@ module.exports = {
           if (friends) {
             // send entries
             db.Entry.findAll({ 
-              where: { userId: req.query.userId },
+              where: { 
+                userId: req.query.userId,
+              },
               order: [['createdAt', 'DESC']]
             })
               .then(function(entries){
@@ -42,7 +46,12 @@ module.exports = {
         });
     } else {
       db.Entry.findAll({ 
-        where: { userId: req.user.id },
+        where: { 
+          userId: req.user.id,
+          tags: {
+            $contains: searchParams
+          }
+        },
         order: [['createdAt', 'DESC']]
       })
       .then(function(entries){

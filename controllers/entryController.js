@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getEntries: function(req, res, next) {
-    var searchParams = req.query.tags || [];
+    var searchParams = req.query.tags ? JSON.parse(req.query.tags) : [];
     if (req.query.userId && (req.query.userId !== req.user.id.toString())) {
       // check if req.query.userId is in friendlist
       db.Relationships.findOne({ 
@@ -28,6 +28,9 @@ module.exports = {
             db.Entry.findAll({ 
               where: { 
                 userId: req.query.userId,
+                tags: {
+                  $contains: searchParams
+                }
               },
               order: [['createdAt', 'DESC']]
             })

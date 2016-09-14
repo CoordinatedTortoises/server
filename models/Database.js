@@ -11,7 +11,10 @@ var User = sequelize.define('user', {
 var Entry = sequelize.define('entry', {
   text: Sequelize.STRING,
   location: Sequelize.STRING,
-  tags: Sequelize.STRING
+  tags: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
+    defaultValue: []
+  }
 });
 
 var Relationships = sequelize.define('relationships', {

@@ -5,7 +5,6 @@ module.exports = {
   createEntry: function(req, res, next){
     var query = req.body;
     query['userId'] = req.user.id;
-    console.log(query);
     db.Entry.create(query)
       .then(function(newEntry) {
         res.send('Success');

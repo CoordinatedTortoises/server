@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 var connectionString;
-if(process.env.DATABASE_URL){
+if (process.env.DATABASE_URL) {
   connectionString = process.env.DATABASE_URL;
 } else {
   var connectionString = require('../config/db.js'); 

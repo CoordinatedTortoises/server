@@ -33,7 +33,9 @@ module.exports = {
         res.status(404).json(err);
       });
   },
-
+  updateUser: function(req, res, next) {
+    var username = req;
+  },
   signIn: function(req, res, next) {
     var username = req.body.username;
     var password = req.body.password;

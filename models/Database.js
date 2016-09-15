@@ -13,8 +13,13 @@ var sequelize = new Sequelize(connectionString, {
 // Define the model that corresponds to the entry table in the database.
 var User = sequelize.define('user', {
   username: {type: Sequelize.STRING, unique: true },
+  phoneNumber: Sequelize.STRING,
   password: Sequelize.STRING,
-  fullname: Sequelize.STRING
+  fullname: Sequelize.STRING,
+  recentSSID: {
+    type: Sequelize.STRING,
+    defaultValue: 'NOT_SET',
+  }
 });
 
 // Define the model that corresponds to the entry table in the database.

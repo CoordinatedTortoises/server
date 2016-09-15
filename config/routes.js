@@ -2,6 +2,7 @@ var entryController = require('../controllers/entryController.js');
 var userController = require('../controllers/userController.js');
 var friendsController = require('../controllers/friendsController.js');
 var requestController = require('../controllers/requestController.js');
+var accountController = require('../controllers/accountController.js');
 
 var utils = require('./utils.js');
 
@@ -13,9 +14,15 @@ module.exports = function(app, express) {
   app.use('/api/entries', utils.decode);
   app.post('/api/entries', entryController.createEntry);
   app.get('/api/entries', entryController.getEntries);
+  // ----- CBELLE ----- //
+  //app.delete('/api/entries', entryController.deleteEntries);
 
   app.use('/api/users', utils.decode);
   app.get('/api/users', userController.findUser);
+
+  // ----- CBELLE ----- //
+  app.use('/api/account', utils.decode);
+  app.delete('/api/account', accountController.deleteAcct);
 
   app.use('/api/friends', utils.decode);
   app.get('/api/friends', friendsController.fetchFriends);
@@ -31,6 +38,4 @@ module.exports = function(app, express) {
   });
   app.get('/api/friendreq', requestController.getRequests);
   app.delete('/api/friendreq', requestController.rejectRequest);
-
-
-}
+};

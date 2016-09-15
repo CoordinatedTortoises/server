@@ -19,6 +19,7 @@ module.exports = function(app, express) {
 
   app.use('/api/users', utils.decode);
   app.get('/api/users', userController.findUser);
+  app.put('/api/users', userController.updateUser);
 
   // ----- CBELLE ----- //
   app.use('/api/account', utils.decode);

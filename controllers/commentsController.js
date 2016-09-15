@@ -24,7 +24,7 @@ module.exports = {
 
     db.Comments.create(query)
     .then(function(entry) {
-      res.status(200).send('Success');
+      res.status(200).send(JSON.stringify(entry.dataValues));
     })
     .catch(function(err) {
       res.status(404).json(err);

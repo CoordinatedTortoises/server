@@ -3,10 +3,9 @@ var db = require('../models/Database.js');
 module.exports = {
 
   get: function(req, res, next) {
-    
+
     db.Comments.findAll({
       where: {
-        userId: req.query.userId,
         entryId: req.query.entryId
       }
     })
@@ -22,9 +21,7 @@ module.exports = {
   post: function(req, res, next) {
 
     var query = req.body;
-    query.userId = req.user.id;
-    query.entryId = req.entry.id;
-    
+
     db.Comments.create(query)
     .then(function(entry) {
       res.status(200).send('Success');

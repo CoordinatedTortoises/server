@@ -1,14 +1,5 @@
-var Sequelize = require('sequelize');
-
-var connectionString = ''; 
-
-var sequelize = new Sequelize(connectionString, {
-  native: true
-});
-
-module.exports = sequelize;
-
-
+module.exports = ''; 
+//YOUR URL ABOVE
 
 // To connect to the heroku-hosted database, refer to the following website for instructions, or just 
 // enter the psql command below: 

@@ -1,5 +1,15 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../config/db.js');
+var connectionString;
+if(process.env.DATABASE_URL){
+  connectionString = process.env.DATABASE_URL;
+} else {
+  var connectionString = require('../config/db.js'); 
+}
+
+var sequelize = new Sequelize(connectionString, {
+  native: true
+});
+
 // Define the model that corresponds to the entry table in the database.
 var User = sequelize.define('user', {
   username: {type: Sequelize.STRING, unique: true },

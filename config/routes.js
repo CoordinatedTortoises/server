@@ -27,8 +27,6 @@ module.exports = function(app, express) {
   app.use('/api/friends', utils.decode);
   app.get('/api/friends', friendsController.fetchFriends);
   app.post('/api/friends', friendsController.acceptFriendReq);
-  // --- CBELLE ----- //
-  // app.delete('/api/friends', friendsController.deleteFriends);
 
   app.use('/api/friendreq', utils.decode);
   app.post('/api/friendreq', function(req, res, next) {

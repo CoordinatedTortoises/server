@@ -63,10 +63,5 @@ module.exports = {
         res.status(404).json({error: 'Error retrieving entires: ' + err});
       });
     }
-  },
-
-  deleteEntries: function(req, res) {
-    //req has array of selected entry ids
-      //for each id, delete entry in the db.
   }
 };

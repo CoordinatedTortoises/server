@@ -5,9 +5,6 @@ var requestController = require('../controllers/requestController.js');
 
 var utils = require('./utils.js');
 
-var googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyCQadjLseXJqj4XG3uEnDCM-gz1ukhggzs'
-});
 
 module.exports = function(app, express) {
   app.post('/api/signup', userController.createUser);
@@ -37,10 +34,3 @@ module.exports = function(app, express) {
 
 
 }
-
-
-googleMapsClient.reverseGeocode({
-      latlng: [-33.8571965, 151.2151398],
-    }, function(err, res){
-      console.log(res.json.results);
-    });

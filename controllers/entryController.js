@@ -2,16 +2,16 @@ var db = require('../models/Database.js');
 
 module.exports = {
 
-  createEntry: function(req, res, next){
+  createEntry: function(req, res, next) {
     var query = req.body;
     query['userId'] = req.user.id;
     db.Entry.create(query)
       .then(function(newEntry) {
         res.send('Success');
       })
-      .catch(function(err){
-        res.status(404).json(err)
-      })
+      .catch(function(err) {
+        res.status(404).json(err);
+      });
   },
 
   getEntries: function(req, res, next) {
@@ -33,18 +33,18 @@ module.exports = {
               },
               order: [['createdAt', 'DESC']]
             })
-              .then(function(entries){
+              .then(function(entries) {
                 res.send(entries);
               })
-              .catch(function(err){
-                res.status(404).json(err)
+              .catch(function(err) {
+                res.status(404).json(err);
               });
           } else {
-            res.status(404).json({ error: 'you are not friends'})
+            res.status(404).json({ error: 'you are not friends'});
           }
         })
         .catch(function(err) {
-          res.status(404).json(err)
+          res.status(404).json(err);
         });
     } else {
       db.Entry.findAll({ 
@@ -56,13 +56,17 @@ module.exports = {
         },
         order: [['createdAt', 'DESC']]
       })
-      .then(function(entries){
+      .then(function(entries) {
         res.send(entries);
       })
-      .catch(function(err){
+      .catch(function(err) {
         res.status(404).json({error: 'Error retrieving entires: ' + err});
       });
     }
-  }
+  },
 
+  deleteEntries: function(req, res) {
+    //req has array of selected entry ids
+      //for each id, delete entry in the db.
+  }
 };

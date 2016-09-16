@@ -10,7 +10,7 @@ module.exports = {
           return total;
         }, []);
         db.User.findAll({
-          attributes: ['id', 'username', 'fullname'],
+          attributes: ['id', 'username', 'fullname', 'phoneNumber'],
           where: {
             id: {
               $any: query

@@ -47,6 +47,8 @@ module.exports = {
           }
         })
         .then(function(result) {
+          console.log(req.query.ssid);
+          console.log(result);
           res.status(200).json(result);
         })
         .catch(function(err) {

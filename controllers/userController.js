@@ -1,21 +1,27 @@
 var db = require('../models/Database.js');
 //creates tokens for signin.
 var jwt = require('jwt-simple');
+var bcrypt = require('bcrypt');
+// bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+//   // Store hash in your password DB. 
+// });
 
 module.exports = {
   //signup
   createUser: function(req, res, next) {
-    console.log(req.body);
-    db.User.create(req.body)
-      .then(function(newUser) {
-        var token = jwt.encode(newUser, 'secret');
-        res.status(201).json({
-          token: token
+    bcrypt.hash(req.body.password, 20, function(err, hash){
+      req.body.password = hash;
+      db.User.create(req.body)
+        .then(function(newUser) {
+          var token = jwt.encode(newUser, 'secret');
+          res.status(201).json({
+            token: token
+          });
+        })
+        .catch(function(err) {
+          res.status(404).json(err);
         });
-      })
-      .catch(function(err) {
-        res.status(404).json(err);
-      });
+    })
   },
 
   findUser: function(req, res, next) {
@@ -74,12 +80,14 @@ module.exports = {
       if (!user) {
         res.status(404).json({ error: 'User does not exist' });
       } else {
-        if (password === user.password) {
-          var token = jwt.encode(user, 'secret');
-          res.json({token: token});
-        } else {
-          res.status(401).json({error: 'Incorrect password'});
-        }
+        bcrypt.compare(password, user.password, function(err, match){
+          if (match) {
+            var token = jwt.encode(user, 'secret');
+            res.json({token: token});
+          } else {
+            res.status(401).json({error: 'Incorrect password'});
+          }
+        })
       }
     })
     .catch(function(err) {

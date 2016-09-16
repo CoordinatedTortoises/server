@@ -18,9 +18,11 @@ module.exports = {
     //Somehow get the users id
     console.log('Were inthe delete method: ', req.body, req.query);
     var query = {
+      //for all entries of userId
       userId: req.body.userId
     };
     if (req.query.messageId) {
+      //if get request from ..., query has id prop
       query.id = req.query.messageId;
     }
 
@@ -84,15 +86,5 @@ module.exports = {
         res.status(404).json({error: 'Error retrieving entires: ' + err});
       });
     }
-  },
-
-  deleteEntries: function() {
-    //delete all entries of user
-    // db.Entry.destroy({ where: {???}}).then(function(result) {
-    //   res.status(200).send('Successfully deleted entries of ');
-    // }).catch(function(err) {
-    //   console.log(err, 'error');
-    //   res.status(500).send('Error in deleting entries');
-    // });
   }
 };

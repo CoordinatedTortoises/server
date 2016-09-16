@@ -10,7 +10,6 @@ var sequelize = new Sequelize(connectionString, {
   native: true
 });
 
-sequelize.drop();
 
 // Define the model that corresponds to the entry table in the database.
 var User = sequelize.define('user', {

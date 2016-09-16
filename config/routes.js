@@ -17,7 +17,7 @@ module.exports = function(app, express) {
   app.post('/api/entries', entryController.createEntry);
   app.get('/api/entries', entryController.getEntries);
   // ----- CBELLE ----- //
-  //app.delete('/api/entries', entryController.deleteEntries);
+  app.delete('/api/entries', entryController.removeEntries);
 
   app.use('/api/users', utils.decode);
   app.get('/api/users', userController.findUser);

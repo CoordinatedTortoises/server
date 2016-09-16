@@ -14,6 +14,27 @@ module.exports = {
       });
   },
 
+  removeEntries: function(req, res, next) {
+    //Somehow get the users id
+    console.log('Were inthe delete method: ', req.body, req.query);
+    var query = {
+      userId: req.body.userId
+    };
+    if (req.query.messageId) {
+      query.id = req.query.messageId;
+    }
+
+    db.Entry.destroy({
+      where: query
+    }).then(function(entries) {
+      console.log('Delete was a success: ', entries);
+      res.send(entries);
+    }).catch(function(err) {
+      res.send(err);
+    });
+
+  },
+
   getEntries: function(req, res, next) {
     var searchParams = req.query.tags ? JSON.parse(req.query.tags) : [];
     if (req.query.userId && (req.query.userId !== req.user.id.toString())) {

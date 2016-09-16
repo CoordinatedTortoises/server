@@ -8,9 +8,7 @@ module.exports = {
     console.log(req.body);
     db.User.create(req.body)
       .then(function(newUser) {
-        console.log(newUser + '!!!!');
         var token = jwt.encode(newUser, 'secret');
-        console.log(token);
         res.status(201).json({
           token: token
         });

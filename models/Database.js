@@ -10,6 +10,7 @@ var sequelize = new Sequelize(connectionString, {
   native: true
 });
 
+
 // Define the model that corresponds to the entry table in the database.
 var User = sequelize.define('user', {
   username: {type: Sequelize.STRING, unique: true },
@@ -92,12 +93,12 @@ User.hasMany(Request);
 User.hasMany(Comments);
 Entry.hasMany(Comments);
 
-User.sync();
-Entry.sync();
-Relationships.sync();
-Request.sync();
+User.sync({force: true});
+Entry.sync({force: true});
+Relationships.sync({force: true});
+Request.sync({force: true});
 
-Comments.sync();
+Comments.sync({force: true});
 
 module.exports.User = User;
 

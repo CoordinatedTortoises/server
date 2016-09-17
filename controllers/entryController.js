@@ -30,7 +30,7 @@ module.exports = {
       where: query
     }).then(function(entries) {
       console.log('Delete was a success: ', entries);
-      res.send(entries);
+      res.send(200);
     }).catch(function(err) {
       res.send(err);
     });

@@ -88,17 +88,8 @@ var Group = sequelize.define('group', {
 // puts a UserId column on each Entry instance
 // also gives us the `.setUser` method available
 // after creating a new instance of Entry
-// Entry.belongsTo(User);
-// Request.belongsTo(User);
-
-
-User.sync({force: true});
-Entry.sync({force: true});
-Relationships.sync({force: true});
-Request.sync({force: true});
-
-Comments.sync({force: true});
-Group.sync({force: true});
+Entry.belongsTo(User);
+Request.belongsTo(User);
 
 Comments.belongsTo(User);
 Comments.belongsTo(Entry);
@@ -109,7 +100,16 @@ User.hasMany(Request);
 User.hasMany(Comments);
 Entry.hasMany(Comments);
 
-Group.hasMany(User);
+User.sync();
+Entry.sync();
+Relationships.sync();
+Request.sync();
+
+Comments.sync();
+Group.sync();
+
+
+
 
 module.exports.User = User;
 module.exports.Entry = Entry;

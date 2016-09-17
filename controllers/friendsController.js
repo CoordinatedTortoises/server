@@ -1,6 +1,13 @@
 var db = require('../models/Database.js');
 var Sequelize = require('sequelize');
-
+var secrets;
+if (process.env.DATABASE_URL) {
+  secrets = {};
+  secrets.tokenKey = process.env.TOKEN_KEY;
+  secrets.phoneNumberKey = process.env.PHONE_NUMBER_KEY;
+} else {
+  secrets = require('../config/encodeTokens.js');
+}
 
 module.exports = {
 
@@ -22,6 +29,10 @@ module.exports = {
           }
         })
           .then(function(friendList) {
+            friendList.map(function(friend){
+               friend.phoneNumber = jwt.decode(friend.phoneNumber, secrets.phoneNumberKey);
+               return friend;
+            });
             res.status(201).json(friendList);
           })
           .catch(function(err) {

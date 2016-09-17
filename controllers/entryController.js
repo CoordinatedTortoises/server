@@ -4,7 +4,7 @@ module.exports = {
 
   createEntry: function(req, res, next) {
     var query = req.body;
-    query['userId'] = req.user.id;
+    query.userId = req.user.id;
     db.Entry.create(query)
       .then(function(newEntry) {
         res.send('Success');
@@ -39,24 +39,59 @@ module.exports = {
 
   getEntries: function(req, res, next) {
     var searchParams = req.query.tags ? JSON.parse(req.query.tags) : [];
+
+    var filterByTags = function(entries, tagList) {
+
+      var hasIntersect = function(a, b) {
+
+        var commonElement = false;
+
+        a.forEach(function(item) {
+          if (b.indexOf(item) > -1) {
+            commonElement = true;
+          }
+
+        });
+
+        return commonElement;
+      };
+
+      if (tagList.length > 0) {
+
+        var tagEntries = entries.filter(function(entry) {
+
+          var lowerCaseTags = entry.tags.map(function(tag) {
+            return tag.toLowerCase();
+          });
+
+          return hasIntersect(lowerCaseTags, tagList);
+        });
+
+        return tagEntries;
+
+      } else {
+
+        return entries;
+
+      }
+    };
+
     if (req.query.userId && (req.query.userId !== req.user.id.toString())) {
       // check if req.query.userId is in friendlist
-      db.Relationships.findOne({ 
+      db.Relationships.findOne({
         where: { user1: req.user.id, user2: req.query.userId }
       })
         .then(function(friends) {
           if (friends) {
             // send entries
-            db.Entry.findAll({ 
-              where: { 
-                userId: req.query.userId,
-                tags: {
-                  $contains: searchParams
-                }
+            db.Entry.findAll({
+              where: {
+                userId: req.query.userId
               },
               order: [['createdAt', 'DESC']]
             })
               .then(function(entries) {
+                entries = filterByTags(entries, searchParams);
                 res.send(entries);
               })
               .catch(function(err) {
@@ -71,16 +106,14 @@ module.exports = {
           res.status(404).json(err);
         });
     } else {
-      db.Entry.findAll({ 
-        where: { 
-          userId: req.user.id,
-          tags: {
-            $contains: searchParams
-          }
+      db.Entry.findAll({
+        where: {
+          userId: req.user.id
         },
         order: [['createdAt', 'DESC']]
       })
       .then(function(entries) {
+        entries = filterByTags(entries, searchParams);
         res.send(entries);
       })
       .catch(function(err) {

@@ -3,7 +3,6 @@ var userController = require('../controllers/userController.js');
 var friendsController = require('../controllers/friendsController.js');
 var requestController = require('../controllers/requestController.js');
 var accountController = require('../controllers/accountController.js');
-
 var commentsController = require('../controllers/commentsController.js');
 
 var utils = require('./utils.js');

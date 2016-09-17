@@ -15,9 +15,7 @@ if (process.env.DATABASE_URL) {
 module.exports = {
   //signup
   createUser: function(req, res, next) {
-    console.log('here', Date.now());
     bcrypt.hash(req.body.password, 7, function(err, hash){
-      console.log('here now', Date.now())
       req.body.password = hash;
       req.body.phoneNumber = jwt.encode(req.body.phoneNumber, secrets.phoneNumberKey);
       db.User.create(req.body)

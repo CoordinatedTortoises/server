@@ -11,7 +11,6 @@ if (process.env.DATABASE_URL) {
   secrets = require('../config/encodeTokens.js');
 }
 
-console.log(jwt.decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWNlbnRTU0lEIjoiTk9UX1NFVCIsImlkIjoyNSwidXNlcm5hbWUiOiJBcmNAZy5jb20iLCJmdWxsbmFtZSI6IkFyYyIsInBhc3N3b3JkIjoiV2h5IHRoZSBoZWxsIGFyZSB5b3UgbG9va2luZyBhdCB0aGlzIiwicGhvbmVOdW1iZXIiOiIxMjMyMzQzMjQzNDMyNCIsInVwZGF0ZWRBdCI6IjIwMTYtMDktMTdUMDI6MTk6MjYuNDc3WiIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTdUMDI6MTk6MjYuNDc3WiJ9.Lc-G1iaJzhxjb7T4oFdeH2OjHs2QV0IUFawKbt-IDLU', secrets.tokenKey));
 
 module.exports = {
   //signup

@@ -10,6 +10,7 @@ if (process.env.DATABASE_URL) {
   secrets = require('../config/encodeTokens.js');
 }
 
+
 module.exports = {
 
   fetchFriends: function(req, res, next) {
@@ -31,8 +32,12 @@ module.exports = {
         })
           .then(function(friendList) {
             friendList.map(function(friend){
-               friend.phoneNumber = jwt.decode(friend.phoneNumber, secrets.phoneNumberKey);
-               return friend;
+              try{
+                friend.phoneNumber = jwt.decode(friend.phoneNumber, secrets.phoneNumberKey);
+              } catch (err) {
+                friend.phoneNumber = 'UNKNOWN';
+              }
+              return friend;
             });
             console.log(friendList);
             res.status(201).json(friendList);

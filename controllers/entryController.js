@@ -16,7 +16,6 @@ module.exports = {
 
   removeEntries: function(req, res, next) {
     //Somehow get the users id
-    console.log('Were inthe delete method: ', req.body, req.query);
     var query = {
       //for all entries of userId
       userId: req.body.userId

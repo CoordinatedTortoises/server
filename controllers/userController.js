@@ -11,6 +11,7 @@ if (process.env.DATABASE_URL) {
   secrets = require('../config/encodeTokens.js');
 }
 
+console.log(jwt.decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWNlbnRTU0lEIjoiTk9UX1NFVCIsImlkIjoyNSwidXNlcm5hbWUiOiJBcmNAZy5jb20iLCJmdWxsbmFtZSI6IkFyYyIsInBhc3N3b3JkIjoiV2h5IHRoZSBoZWxsIGFyZSB5b3UgbG9va2luZyBhdCB0aGlzIiwicGhvbmVOdW1iZXIiOiIxMjMyMzQzMjQzNDMyNCIsInVwZGF0ZWRBdCI6IjIwMTYtMDktMTdUMDI6MTk6MjYuNDc3WiIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTdUMDI6MTk6MjYuNDc3WiJ9.Lc-G1iaJzhxjb7T4oFdeH2OjHs2QV0IUFawKbt-IDLU', secrets.tokenKey));
 
 module.exports = {
   //signup
@@ -22,12 +23,14 @@ module.exports = {
       req.body.phoneNumber = jwt.encode(req.body.phoneNumber, secrets.phoneNumberKey);
       db.User.create(req.body)
         .then(function(newUser) {
-          var token = jwt.encode(newUser, secrets.tokenKey);
-          res.status(201).json({
-            token: token
-          });
+          var falseUser = newUser;
+          falseUser.phoneNumber = jwt.decode(newUser.phoneNumber, secrets.phoneNumberKey);
+          falseUser.password = 'Why the hell are you looking at this';
+          var token = jwt.encode(falseUser, secrets.tokenKey);
+          res.status(201).json({token: token});
         })
         .catch(function(err) {
+          console.log(err);
           res.status(404).json(err);
         });
     })
@@ -91,8 +94,10 @@ module.exports = {
       } else {
         bcrypt.compare(password, user.password, function(err, match){
           if (match) {
-            user.phoneNumber = jwt.decode(user.phoneNumber, secrets.phoneNumberKey);
-            var token = jwt.encode(user, tokenKey);
+            var falseUser = JSON.parse(JSON.stringify(user));
+            falseUser.phoneNumber = jwt.decode(user.phoneNumber, secrets.phoneNumberKey);
+            falseUser.password = 'Stop looking at this';
+            var token = jwt.encode(falseUser, secrets.tokenKey);
             res.json({token: token});
           } else {
             res.status(401).json({error: 'Incorrect password'});

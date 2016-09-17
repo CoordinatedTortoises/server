@@ -100,6 +100,9 @@ User.hasMany(Request);
 User.hasMany(Comments);
 Entry.hasMany(Comments);
 
+Group.belongsToMany(User, {through: 'UserGroup'});
+User.belongsToMany(Group, {through: 'UserGroup'});
+
 User.sync();
 Entry.sync();
 Relationships.sync();

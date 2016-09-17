@@ -1,4 +1,6 @@
 var db = require('../models/Database.js');
+var Sequelize = require('sequelize');
+
 
 module.exports = {
 
@@ -6,6 +8,7 @@ module.exports = {
     db.Relationships.findAll({ where: {user1: req.user.id }})
       .then(function(friends) {
         var query = friends.reduce(function(total, friend) {
+          console.log(friend);
           total.push(friend.dataValues.user2);
           return total;
         }, []);
@@ -13,7 +16,8 @@ module.exports = {
           attributes: ['id', 'username', 'fullname', 'phoneNumber'],
           where: {
             id: {
-              $any: query
+              $any: query,
+              $ne: req.user.id
             }
           }
         })
@@ -21,10 +25,12 @@ module.exports = {
             res.status(201).json(friendList);
           })
           .catch(function(err) {
+            console.log(err);
             res.status(404).json(err);
           });
       })
       .catch(function(err) {
+        console.log(err);
         res.status(404).json(err);
       });
   },

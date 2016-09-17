@@ -1,4 +1,6 @@
 var db = require('../models/Database.js');
+//use jwt to blacklist token.. somehow
+// var jwt = require('jwt-simple');
 
 module.exports = {
   deleteAcct: function(req, res, next) {

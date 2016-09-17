@@ -19,7 +19,8 @@ var User = sequelize.define('user', {
   recentSSID: {
     type: Sequelize.STRING,
     defaultValue: 'NOT_SET',
-  }
+  },
+  recentLocation: Sequelize.GEOGRAPHY
 });
 
 // Define the model that corresponds to the entry table in the database.

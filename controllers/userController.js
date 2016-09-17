@@ -1,21 +1,36 @@
 var db = require('../models/Database.js');
 //creates tokens for signin.
 var jwt = require('jwt-simple');
+var bcrypt = require('bcrypt');
+var secrets;
+if (process.env.DATABASE_URL) {
+  secrets = {};
+  secrets.tokenKey = process.env.TOKEN_KEY;
+  secrets.phoneNumberKey = process.env.PHONE_NUMBER_KEY;
+} else {
+  secrets = require('../config/encodeTokens.js');
+}
+
 
 module.exports = {
   //signup
   createUser: function(req, res, next) {
-    console.log(req.body);
-    db.User.create(req.body)
-      .then(function(newUser) {
-        var token = jwt.encode(newUser, 'secret');
-        res.status(201).json({
-          token: token
+    bcrypt.hash(req.body.password, 7, function(err, hash){
+      req.body.password = hash;
+      req.body.phoneNumber = jwt.encode(req.body.phoneNumber, secrets.phoneNumberKey);
+      db.User.create(req.body)
+        .then(function(newUser) {
+          var falseUser = newUser;
+          falseUser.phoneNumber = jwt.decode(newUser.phoneNumber, secrets.phoneNumberKey);
+          falseUser.password = 'Why the hell are you looking at this';
+          var token = jwt.encode(falseUser, secrets.tokenKey);
+          res.status(201).json({token: token});
+        })
+        .catch(function(err) {
+          console.log(err);
+          res.status(404).json(err);
         });
-      })
-      .catch(function(err) {
-        res.status(404).json(err);
-      });
+    })
   },
 
   findUser: function(req, res, next) {
@@ -74,12 +89,17 @@ module.exports = {
       if (!user) {
         res.status(404).json({ error: 'User does not exist' });
       } else {
-        if (password === user.password) {
-          var token = jwt.encode(user, 'secret');
-          res.json({token: token});
-        } else {
-          res.status(401).json({error: 'Incorrect password'});
-        }
+        bcrypt.compare(password, user.password, function(err, match){
+          if (match) {
+            var falseUser = JSON.parse(JSON.stringify(user));
+            falseUser.phoneNumber = jwt.decode(user.phoneNumber, secrets.phoneNumberKey);
+            falseUser.password = 'Stop looking at this';
+            var token = jwt.encode(falseUser, secrets.tokenKey);
+            res.json({token: token});
+          } else {
+            res.status(401).json({error: 'Incorrect password'});
+          }
+        })
       }
     })
     .catch(function(err) {

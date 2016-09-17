@@ -50,36 +50,38 @@ module.exports = {
         .catch(function(err) {
           res.status(404).json(err);
         });
-      } else if (req.query.ssid) {
-        var ssid = req.query.ssid;
-        db.User.findAll({
-          where: {
-            recentSSID: {
-              $ilike: '%' + ssid + '%'
+      } else if (req.query.ssid && req.query.ip) {
+        bcrypt.hash(req.body.ssid + req.body.ip, function(err, hash){
+          db.User.findAll({
+            where: {
+              recentSSID: {
+                $ilike: '%' + hash + '%'
+              }
             }
-          }
-        })
-        .then(function(result) {
-          res.status(200).json(result);
-        })
-        .catch(function(err) {
-          res.status(404).json(err);
+          })
+          .then(function(result) {
+            res.status(200).json(result);
+          })
+          .catch(function(err) {
+            res.status(404).json(err);
+          });
         });
       }
   },
   updateUser: function(req, res, next) {
     var id = req.user.id;
-    db.User.update({recentSSID: req.body.ssid}, {
-      where: {id: id}
-    })
-    .then(function(result){
-      console.log(result);
-      res.status(204).json(result);
-    })
-    .catch(function(err) {
-      res.status(404).json(err);
+    bcrypt.hash(req.body.ssid + req.body.ip, function(err, hash){
+      db.User.update({recentSSIPhash: hash}, {
+        where: {id: id}
+      })
+      .then(function(result){
+        console.log(result);
+        res.status(204).json(result);
+      })
+      .catch(function(err) {
+        res.status(404).json(err);
+      });
     });
-
   },
   signIn: function(req, res, next) {
     var username = req.body.username;

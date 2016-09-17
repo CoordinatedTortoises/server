@@ -22,7 +22,7 @@ module.exports = {
         .then(function(newUser) {
           var falseUser = newUser;
           falseUser.phoneNumber = jwt.decode(newUser.phoneNumber, secrets.phoneNumberKey);
-          falseUser.password = 'Why the hell are you looking at this';
+          falseUser.password = 'Stop looking at this';
           var token = jwt.encode(falseUser, secrets.tokenKey);
           res.status(201).json({token: token});
         })

@@ -100,6 +100,8 @@ User.hasMany(Request);
 User.hasMany(Comments);
 Entry.hasMany(Comments);
 
+Group.hasMany(User);
+
 User.sync();
 Entry.sync();
 Relationships.sync();

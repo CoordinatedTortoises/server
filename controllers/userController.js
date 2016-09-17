@@ -2,15 +2,22 @@ var db = require('../models/Database.js');
 //creates tokens for signin.
 var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
-// bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-//   // Store hash in your password DB. 
-// });
+var secrets;
+if (process.env.DATABASE_URL) {
+  secrets = {};
+  secrets.tokenKey = process.env.TOKEN_KEY;
+  secrets.phoneNumberKey = process.env.PHONE_NUMBER_KEY;
+} else {
+  secrets = require('../config/encodeTokens.js');
+}
+
 
 module.exports = {
   //signup
   createUser: function(req, res, next) {
     bcrypt.hash(req.body.password, 20, function(err, hash){
       req.body.password = hash;
+      req.body.phoneNumber = jwt.encode(req.body.phoneNumber, secrets.phoneNumberKey);
       db.User.create(req.body)
         .then(function(newUser) {
           var token = jwt.encode(newUser, 'secret');
@@ -82,7 +89,8 @@ module.exports = {
       } else {
         bcrypt.compare(password, user.password, function(err, match){
           if (match) {
-            var token = jwt.encode(user, 'secret');
+            user.phoneNumber = jwt.decode(user.phoneNumber, secrets.phoneNumberKey);
+            var token = jwt.encode(user, tokenKey);
             res.json({token: token});
           } else {
             res.status(401).json({error: 'Incorrect password'});

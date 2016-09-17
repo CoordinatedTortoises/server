@@ -1,5 +1,6 @@
 var db = require('../models/Database.js');
 var Sequelize = require('sequelize');
+var jwt = require('jwt-simple');
 var secrets;
 if (process.env.DATABASE_URL) {
   secrets = {};
@@ -33,6 +34,7 @@ module.exports = {
                friend.phoneNumber = jwt.decode(friend.phoneNumber, secrets.phoneNumberKey);
                return friend;
             });
+            console.log(friendList);
             res.status(201).json(friendList);
           })
           .catch(function(err) {

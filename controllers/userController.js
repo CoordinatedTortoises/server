@@ -15,12 +15,14 @@ if (process.env.DATABASE_URL) {
 module.exports = {
   //signup
   createUser: function(req, res, next) {
-    bcrypt.hash(req.body.password, 20, function(err, hash){
+    console.log('here', Date.now());
+    bcrypt.hash(req.body.password, 7, function(err, hash){
+      console.log('here now', Date.now())
       req.body.password = hash;
       req.body.phoneNumber = jwt.encode(req.body.phoneNumber, secrets.phoneNumberKey);
       db.User.create(req.body)
         .then(function(newUser) {
-          var token = jwt.encode(newUser, 'secret');
+          var token = jwt.encode(newUser, secrets.tokenKey);
           res.status(201).json({
             token: token
           });

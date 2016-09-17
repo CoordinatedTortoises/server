@@ -10,6 +10,7 @@ module.exports = {
         res.send('Success');
       })
       .catch(function(err) {
+        console.log(err);
         res.status(404).json(err);
       });
   },

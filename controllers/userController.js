@@ -27,7 +27,6 @@ module.exports = {
           res.status(201).json({token: token});
         })
         .catch(function(err) {
-          console.log(err);
           res.status(404).json(err);
         });
     })
@@ -54,7 +53,7 @@ module.exports = {
         bcrypt.hash(req.body.ssid + req.body.ip, function(err, hash){
           db.User.findAll({
             where: {
-              recentSSID: {
+              recentSSIPhash: {
                 $ilike: '%' + hash + '%'
               }
             }
@@ -75,7 +74,6 @@ module.exports = {
         where: {id: id}
       })
       .then(function(result){
-        console.log(result);
         res.status(204).json(result);
       })
       .catch(function(err) {

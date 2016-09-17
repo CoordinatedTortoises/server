@@ -66,6 +66,7 @@ module.exports = {
           }
         })
         .catch(function(err) {
+          console.log(err);
           res.status(404).json(err);
         });
     } else {
@@ -82,6 +83,7 @@ module.exports = {
         res.send(entries);
       })
       .catch(function(err) {
+        console.log(err);
         res.status(404).json({error: 'Error retrieving entires: ' + err});
       });
     }

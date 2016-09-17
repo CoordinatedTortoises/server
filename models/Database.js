@@ -16,11 +16,14 @@ var User = sequelize.define('user', {
   phoneNumber: Sequelize.STRING,
   password: Sequelize.STRING,
   fullname: Sequelize.STRING,
-  recentSSID: {
+  recentSSIPhash: {
     type: Sequelize.STRING,
     defaultValue: 'NOT_SET',
   },
-  recentLocation: Sequelize.GEOGRAPHY
+  recentLocation: {
+    type: Sequelize.STRING,
+    defaultValue: 'NOT_SET'
+  }
 });
 
 // Define the model that corresponds to the entry table in the database.
@@ -78,11 +81,24 @@ var Request = sequelize.define('request', {
   }
 });
 
+var Group = sequelize.define('group', {
+  name: {type: Sequelize.STRING, unique: true}
+});
+
 // puts a UserId column on each Entry instance
 // also gives us the `.setUser` method available
 // after creating a new instance of Entry
-Entry.belongsTo(User);
-Request.belongsTo(User);
+// Entry.belongsTo(User);
+// Request.belongsTo(User);
+
+
+User.sync({force: true});
+Entry.sync({force: true});
+Relationships.sync({force: true});
+Request.sync({force: true});
+
+Comments.sync({force: true});
+Group.sync({force: true});
 
 Comments.belongsTo(User);
 Comments.belongsTo(Entry);
@@ -93,16 +109,11 @@ User.hasMany(Request);
 User.hasMany(Comments);
 Entry.hasMany(Comments);
 
-User.sync();
-Entry.sync();
-Relationships.sync();
-Request.sync();
-
-Comments.sync();
+Group.hasMany(User);
 
 module.exports.User = User;
-
 module.exports.Entry = Entry;
 module.exports.Relationships = Relationships;
 module.exports.Request = Request;
 module.exports.Comments = Comments;
+module.exports.Group = Group;
